@@ -5,29 +5,136 @@
   <body>
     {% include header.html %}
 
-    <div class="page-content">
-      <div class="wrapper">
-        <div class="work">
-          <h1 class="page-heading">{{ page.title }}</h1>
-          {{ content }}
+	<div class="page-content">
+		<div class="wrapper">
+			<p style="font-size: 18px;">
+				This is a brief explanation on my career.
+			</p>
+			<br>
+			
+			<!-- 1) Education -->
+			<div class="work-item">
+				<img
+				  src="/assets/img/career/education.png"
+				  alt=Education
+				  class="work-bubble"
+				/>
+				<span class="career-content"> <strong>
+					Education
+				</strong> </span>
+			</div>
+			
+			<span class="career-desc">
+				<ul>
+					<li>
+						Seoul National University (SNU)
+						<ul>
+							<li>
+								[2018.03 ~ ] Undergraduate student at Electrical and Computer Engineering (ECE)
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</span>
+			
+			<br>
+			
+			<!-- 2) Work experience -->
+			<div class="work-item">
+				<img
+				  src="/assets/img/career/work.png"
+				  alt=Work
+				  class="work-bubble"
+				/>
+				<span class="career-content"> <strong>
+					Work experience
+				</strong> </span>
+			</div>
+			
+			
+			
+			<span class="career-desc">
+				<ul>
+					<li>
+						[2023.06 ~ ] Computer Architecture and System Lab (CompArch), Seoul National University (SNU)
+					</li>
+					
+					<li>
+						[2023.01 ~ 2023.06] Networked Computing and ML Lab (NXC), Seoul National University (SNU)
+					</li>
+					
+					<li>
+						[2022.07 ~ 2022.08] Next Generation Communication Center, Samsung Research
+						
+					</li>
+				</ul>
+			</span>
+			
+			<br>
+			
+			<!-- 3) Teaching experience -->
+			<div class="work-item">
+				<img
+				  src="/assets/img/career/teaching.png"
+				  alt=Work
+				  class="work-bubble"
+				/>
+				<span class="career-content"> <strong>
+					Teaching experience
+				</strong> </span>
+			</div>
+			
+			<span class="career-desc">
+				<ul>
+					<li>
+						Coming ...
+					</li>
+					
+					
+				</ul>
+			</span>
+			
+			<br>
+			
+			<!-- 4) Skills -->
+			<div class="work-item">
+				<img
+				  src="/assets/img/career/skill.png"
+				  alt=Work
+				  class="work-bubble"
+				/>
+				<span class="career-content"> <strong>
+					Skills
+				</strong> </span>
+			</div>
+			
+			<span class="career-desc">
+				<ul>
+					<li>
+						Coming ...
+					</li>
+					
+					
+				</ul>
+			</span>
+			
+			<br>
+			
+			
+			
+		</div>
+	</div>
+	
+	
+		
 
-          {% for item in page.items %}
-          <div class="work-item">
-            <img
-              src="{{ item.image.src | absolute_url }}"
-              alt="{{ item.image.alt }}"
-              class="work-bubble"
-            />
-            <span class="work-text">
-              <strong>{{ item.title }}</strong>
-              &mdash;
-              {{ item.description }}
-            </span>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
+
+			
+	<span class="career-desc">
+		{{ item.description }}
+	</span>
+			
+
 
     {% include footer.html %}
 

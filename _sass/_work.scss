@@ -1,12 +1,38 @@
 .work-item {
-  clear: both;
-  overflow: hidden;
-  padding-bottom: 3em;
+  //clear: both;
+  //overflow: hidden;
+  //padding-bottom: 0;
+	display: flex;
+	align-items: center;
 }
 
 .work-bubble {
   float: left;
-  padding-right: 20px;
-  width: 100px;
-  height: 100px;
+  padding-right: 25px;
+  //width: 100px;
+  width: 30px;
+  //height: 100px;
+  vertical-align: bottom;
+}
+
+.career-content {
+	font-size: 20px;
+}
+.career-desc {
+	font-size: 18px;
+	padding-left: 40px;
+}
+
+ul {
+  //list-style-position: inside;
+  list-style-position: outside;
+}
+
+li {
+	//padding-left: 10px;
+	padding-bottom: 10px;
+}
+
+li > ul {
+  padding-top: 10px; 
 }
