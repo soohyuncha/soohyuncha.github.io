@@ -13,15 +13,35 @@
 }
 
 .footer-col {
-  font-size: 12px;
+	font-size: 12px;
 
-  h4 {
-    margin-bottom: 0;
-    margin-top: 0;
-    line-height: 30px;
-  }
+	h4 {
+		margin-bottom: 0;
+		margin-top: 0;
+		line-height: 30px;
+	}
 
-  .social-links {
+	.social-links {
+		display: flex;
+		flex-wrap: wrap;
+		//align-items: flex-start;
+		
+		.social-link-item {
+			margin-top: 6.5px;
+			margin-bottom: 10px;
+			
+			img {
+				width: 16px;
+				height: 16px;
+				margin-right: 5px;
+			}
+			.content {
+				text-indent: 25px;
+			}
+		}
+	}
+}
+  /*.social-links {
     display: flex;
     flex-wrap: wrap;
 
@@ -40,7 +60,7 @@
 
       a {
         margin-left: 6px;
-        word-break: break-all;
+        // word-break: break-all;
       }
     }
 
@@ -49,7 +69,7 @@
       line-height: 38px;
     }
   }
-}
+}*/
 
 #wechat-widget {
   display: none;

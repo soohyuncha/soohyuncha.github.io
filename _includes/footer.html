@@ -1,32 +1,72 @@
 <footer class="site-footer">
   <div class="wrapper">
     <div class="footer-col-wrapper">
-      <div class="footer-col footer-col-1">
+	
+	
+	
+    <div class="footer-col footer-col-1">
+
+		<!-- Contack Info (mail) -->
+		
         <h4>CONTACT</h4>
+			<div class="social-links">
+			
+				<div class="social-link-item">
+					<img
+						src = "{{ "/assets/img/icons/email.png" | absolute_url }}"
+						alt = e-mail
+					/>
+					<a href="mailto:crm06217@snu.ac.kr"> crm06217@snu.ac.kr </a>
+					<br>
+					<div class="content"> 
+						<a href="mailto:crm06217@naver.com"> crm06217@naver.com </a>
+					</div>
+		
+				</div>
+			
+			</div>
+	</div>
 
-        <div class="social-links">
-          {% for contact in site.footer.contact %}
-            <div class="social-link contact-links">
 
-              {% assign contact_icon_path = "/assets/img/icons/" | append: contact.name | downcase | append: ".png" | absolute_url %}
-              <img
-                src="{{ contact_icon_path }}"
-                alt="{{ contact.name | downcase }}"
-              />
-              <a href="{{ contact.link }}" id="{{ contact.name | downcase }}-link">
-                {% if contact.value and contact.value != "" and contact.value != nil %}
-                  {{ contact.value }}
-                {% else %}
-                  {{ contact.name }}
-                {% endif %}
-              </a>
-            </div>
-
-          {% endfor %}
-        </div>
-      </div>
-
-      <div class="footer-col footer-col-2">
+	<div class="footer-col footer-col-2">
+		<h4>FOLLOW</h4>
+		
+		<div class="social-links">
+			
+			<div class="social-link-item" style="margin-right: 45px;">
+				<img
+					src = "{{ "/assets/img/icons/github.png" | absolute_url }}"
+					alt = github
+				/>
+				<a href="https://github.com/soohyuncha"> Github </a>
+			</div>
+			
+			
+			<div class="social-link-item">
+				<img
+					src = "{{ "/assets/img/icons/tistory.png" | absolute_url }}"
+					alt = tistory
+				/>
+				<a href="https://crm06217.tistory.com/"> Tistory </a>
+			</div>
+			
+			
+			<div class="social-link-item">
+				<img
+					src = "{{ "/assets/img/icons/linkedin.png" | absolute_url }}"
+					alt = linkedin
+				/>
+				<a> Linkedin </a>
+			</div>
+		</div>
+	</div>
+        
+	<div class="footer-col footer-col-3 powered-by">
+        <p>
+            powered by <a href="https://github.com/eliottvincent/bay">Bay</a> | {{ 'now' | date: "%Y" }}
+        </p>
+    </div>
+      <!--<div class="footer-col footer-col-2">
         <h4>FOLLOW</h4>
 
         <div class="social-links follow-links">
@@ -57,9 +97,10 @@
             powered by <a href="https://github.com/eliottvincent/bay">Bay</a> | {{ 'now' | date: "%Y" }}
           </p>
         </div>
-      {% endif %}
+      {% endif %}-->
+	  
     </div>
   </div>
 </footer>
 
-{% include wechat-widget.html %}
+<!--{% include wechat-widget.html %}-->
