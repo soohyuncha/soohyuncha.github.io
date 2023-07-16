@@ -1,21 +1,32 @@
 .blog-post-list {
-  .blog-post-date {
-    width: 6em;
-    color: #777;
-    display: block;
-    float: left;
+	h4 {
+		font-size: 20px;
+	}
 
-    @include media-query($on-mobile) {
-      display: block;
-      float: none;
-      color: #333;
-      font-size: 11px;
-      margin-top: 14px;
-    }
-  }
+	.blog-post-item {
+		margin-bottom: 5px;
+		
+		.blog-post-date {
+			width: 6em;
+			color: #777;
+			display: block;
+			float: left;
+			padding-right: 10px;
+		}
+		
+		@include media-query($on-mobile) {
+			display: block;
+			float: none;
+			color: #333;
+			font-size: 11px;
+			margin-top: 14px;
+		}
 
-  .blog-post-title {
-    font-size: 100%;
-    letter-spacing: normal;
-  }
+
+		.blog-post-title {
+			font-size: 100%;
+			letter-spacing: normal;
+		}
+	}
+
 }

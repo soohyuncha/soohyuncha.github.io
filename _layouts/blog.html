@@ -5,29 +5,32 @@
   <body>
     {% include header.html %}
 
-    <div class="page-content">
-      <div class="wrapper">
-        <div class="blog">
-          <h1 class="page-heading">{{ page.title }}</h1>
-          {{ content }}
+	<div class="page-content">
+		<div class="wrapper">
+			<div class="blog-post-list">
+				<h4> My blog post list </h4>
+		
+				{% for post in site.posts %}
+					<div class="blog-post-item">
+					
+						<span class="blog-post-date">
+							{{ post.date | date: "%m-%d-%Y" }}
+						</span>
+					
+						<a href="{{ post.url | replace:".html","" | prepend: site.baseurl }}" class="blog-post-title">
+							{{ post.title }}
+						</a>
+		
+					</div>
+					
+				{% endfor %}
+			</div>
+		
+		</div>
+	</div>
 
-          <p class="blog-post-list">
-            {% for post in site.posts %}
 
-              {% if post.draft != true %}
-                <!--<span class="blog-post-date">{{ post.date | date: "%-m/%-d/%y" }}</span>
-                <a href="{{ post.url | replace:".html","" | prepend: site.baseurl }}" class="blog-post-title">
-                  {{ post.title }}
-                </a>-->
-                <br />
-
-              {% endif %}
-
-            {% endfor %}
-          </p>
-        </div>
-      </div>
-    </div>
+ 
 
     {% include footer.html %}
 
