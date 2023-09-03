@@ -34,8 +34,8 @@ og_image: /assets/img/content/post-example/Banner.jpg
 
 <span style="font-size: 16px;">
 &nbsp; &nbsp; &nbsp; <span style="font-size: 26px;">R</span>ecently, transformer-based deep neural network outperforms in various AI domains such as
-NLP (natural language processing), and CV (computer vision). Its key mechanism is <em> attention </em> and it was first introduced in [[1]](#6-reference).
-<em> Attention </em> mechanism allows model to attend to tokens differently according to their contextual importance. However, attention mechanism
+NLP (natural language processing), and CV (computer vision). Its key mechanism is <em> attention </em> which was first introduced in [[1]](#6-reference).
+Attention mechanism allows model to attend to tokens differently according to their contextual importance. However, attention mechanism
 requires high cost of computation in that its complexity is quadratically proportional to input token length. This limits maximum input sequence length
 of model (such as 1024 or 2048), because inference latency and power consumption are important constraints in real world applications using deep neural network.
 </span>
@@ -43,19 +43,24 @@ of model (such as 1024 or 2048), because inference latency and power consumption
 
 
 <span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; To address this fundamental limitation, there have been many researches on accelerating transformer especially focused on attention. Two main algorithmic
-optimization schemes are <em> quantization </em> and <em> pruning </em>. With these optimization techniques, more hardware efficient implementation is possible.
-Compared to execution of inference in general purpose processor such as CPU or GPU, offloading some part of compuation (or maybe full) to dedicated hardware can
+&nbsp; &nbsp; &nbsp; To address this fundamental limitation, there have been many researches on accelerating transformer especially focused on attention. Two main
+algorithmic optimization schemes are <em> quantization </em> and <em> pruning </em>. With these optimization techniques, more hardware efficient implementation is
+possible. Compared to execution of inference in general purpose processor such as CPU or GPU, offloading some part of compuation (or maybe full) to dedicated hardware can
 achieve high speedup and energy efficiency. It may contribute to more efficient execution of deep neural network applications, and expand limitation of model
 capacity such as maximum token length potentially allowing model to do some more complicated and challenging task.
 </span>
 
 <span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; In this article, I will introduce some backgrounds on attention mechanism and mainly analyze two main accelerating technique quantization
+&nbsp; &nbsp; &nbsp; This article will introduce some backgrounds on attention mechanism and mainly analyze two main accelerating techniques, quantization
 and pruning with several recent researches. Finally, I will discuss about this trends and further research topics.
 </span>
 
 ### 2 BACKGROUND
+
+<span style="font-size: 20px;">
+2.1 Transformer Layer and Attention Mechanism
+</span>
+
 <img src="{{ "/assets/img/content/transformer/attention_operation.png" | absolute_url }}" alt="attention" >
 <br>
 
@@ -63,22 +68,44 @@ and pruning with several recent researches. Finally, I will discuss about this t
 &nbsp; &nbsp; &nbsp; Transformer-based neural network consists of a stack of transformer layers and additional epilogue layer depending on its target task.
 Number of transformer layer varies according to model capacity. For example, BERT-base uses 12 layers whereas BERT-large uses 24 [[2]](#6-reference). 
 <br>
-&nbsp; &nbsp; &nbsp; A single transformer layer is shown in left part of Figure 1. It is composed of three main parts: <em> QKV generation, Multi-head
-attention, Feed forward network. </em> Dimension of block input is (n, d<sub>model</sub>) where n is sequence length and d<sub>model</sub> is embedding
+&nbsp; &nbsp; &nbsp; A single transformer layer is shown in left part of Figure 1. It is composed of three main parts:
+<strong> <em> QKV generation, Multi-head attention, Feed forward network (FFN). </em> </strong>
+ Dimension of block input is (n, d<sub>model</sub>) where n is sequence length and d<sub>model</sub> is embedding
 dimension (768 for BERT-base) [[2]](#6-reference). In QKV generation stage, the block input is processed by three different fully connected layers,
 resulting in three matrices: Q (Query), K (Key), and V (Value). QKV matrices are divided into h heads and processed by multi-head attention layer. Let's take
 a look at the operation of single head attention layer, shown in the right part of Figure 1. Matrix multiplication of Q and transpose of K is processed by
 row-wise softmax operation. This result is especially referred to as the <em> attention score(=probability) </em> which indicates the degree of correlation
 between each query and key. Finally, attention output is generated by weighted sum of row of value matrix whose weight is attention score of corresponding
-query. Each head generates attention output of shape (n, d<sub>k</sub>) and all results are concatenated with shape (n, d<sub>model</sub>). Usually this
-concatenated output pass through additional fc layer, generating same shape. Feed forward network is consist of two fc layers and hidden dimension of fc layer
+query. Each head generates an attention output of shape (n, d<sub>k</sub>) and all the results are concatenated, resulting in its shape being
+(n, d<sub>model</sub>). Usually this concatenated output pass through additional fc layer, generating same shape.
+Feed forward network is consist of two fc layers and hidden dimension of fc layer
 is usually larger than d<sub>model</sub>. (3,072 which is 4 times of d<sub>model</sub> in BERT-base model [[2]](#6-reference))
+</span>
+
+
+<span style="font-size: 20px;">
+2.2 Computational Complexity
+</span>
+
+<span style="font-size: 16px;">
+&nbsp; &nbsp; &nbsp; This section analyze the computational complexity of 3 main operations in a transformer layer. It provides some motivation in accelerating
+the operations. As these 3 operations fundamentally involve matrix multiplication, analyzing dimensions of operand matrices is required.
+<br>
+&nbsp; &nbsp; &nbsp; Firstly, in the QKV generation stage, an input matrix of dimension (n, d<sub>model</sub>) is multiplied by 
+a matrix of dimension (d<sub>model</sub>, d<sub>model</sub>)
+, resulting in a computational complexity of of O(n &#183; d<sub>model</sub><sup>2</sup>).
+Secondly, in the attention layer, the computational complexity for both multiplication of Q &#183; K<sup>T</sup> and attention score with V
+is O(n<sup>2</sup> &#183; d<sub>model</sub>). 
+Thirdly, in the FFN layer, an input matrix of dimension (n, d<sub>model</sub>) is multiplied by 
+a matrix of dimension (d<sub>model</sub>, c &#183; d<sub>model</sub>) where c is a constant. Complexity is O(n &#183; d<sub>model</sub><sup>2</sup>) which
+is same as in the QKV generation.
 </span>
 
 ### 3 ACCELERATION TECHNIQUES
 <span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; Three main approaches in accelerating neural network is dataflow, sparsity, and quantization [[3]](#6-reference)). As dataflow is
-fundamentally related to HW-based acceleration scheme, I will talk about sparsity/pruning and quantization in this article.
+&nbsp; &nbsp; &nbsp; Three main approaches in accelerating neural network are dataflow, sparsity, and quantization [[3]](#6-reference). As dataflow is
+fundamentally related to all the HW-based acceleration schemes, this article will primarily focus on the other two:
+<strong> <em> sparsity/pruning and quantization </em> </strong>.
 </span>
 
 <span style="font-size: 20px;">
@@ -87,18 +114,29 @@ fundamentally related to HW-based acceleration scheme, I will talk about sparsit
 
 <span style="font-size: 16px;">
 &nbsp; &nbsp; &nbsp; Sparsity enables more efficient HW-based matrix multiplication by effectively skipping multiplications with zero values. Pruning aims to
-convert unimportant values (ex. near-zero value) to zero, enhancing the sparsity of the matrix.
-<span>
+convert unimportant values, such as thosee near-zero value, into zeros, enhancing the sparsity of the matrix.
+</span>
 
 <span style="font-size: 16px;">
 &nbsp; &nbsp; &nbsp; Main approaches of pruning is to select only important (highly correlated) keys for each query, thereby increasing the sparsity of
-attention score matrix ([[4], [5], [6]](#6-reference)).
+attention score matrix ([[4], [5], [6]](#6-reference)). To identify a set of important keys, prior research has suggested methods for the
+approximate computation of attention matrix (before softmax).
+<br>
+&nbsp; &nbsp; &nbsp;  A<sup>3</sup> [[4]](#6-reference) approximately computes q &#183; K<sup>T</sup>,
+where q is a single query vector, by iteratively computing the largest and smallest elementwise multiplications. This process can be done
+efficiently by sorting all feature vectors of the key matrix of length n by their values. Keys corresponding to non-zero values in attention vector are
+classified as candidates. Full attention scores are computed only for keys belonging to these candidates, effectively reducing the number of elementwise
+multiplications. After the softmax operation on the attention matrix, further pruning is performed by selecting only elements that exceed 
+T% of the largest element in each row. This pruning can reduce the number of multiplications in the weighted sum of the value matrix. 
 </span>
 
 <span style="font-size: 20px;">
 3.2 Quantization
 </span>
 
+<span style="font-size: 16px;">
+&nbsp; &nbsp; &nbsp; quantization here
+<span>
 
 ### 4 DISCUSSION
 <span style="font-size: 16px;">
