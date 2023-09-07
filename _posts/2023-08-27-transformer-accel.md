@@ -110,7 +110,7 @@ fundamentally related to all the HW-based acceleration schemes, this article wil
 </span>
 
 <span style="font-size: 20px;">
-3.1 Pruning
+3.1 Sparsity/Pruning
 </span>
 
 <span style="font-size: 16px;">
@@ -142,8 +142,21 @@ k<sup>T</sup>, is obtained by applying the cosine function to the estimated angu
 Important keys are selected by comparing them with layer-specific threshold values,
 which are determined offline by running several inferences on the training set.
 <br>
-&nbsp; &nbsp; &nbsp; FACT [[6]](#6-reference) extends approximate computation to QK generation. It uses a leading-one detector as an approximation of an INT
-number, and it can replace costly multiplication with low-cost shift-and-add operations becaues leading-one detection is an approximation of log operation.
+&nbsp; &nbsp; &nbsp; FACT [[6]](#6-reference) extends approximate computation to QK generation. It uses a leading-one detector as an approximation of the INT
+number which has the effect of rounding down to the nearest power of two. With two operands that are powers of two, costly multiplication can be replaced with
+a low-power shift-and-add operation. With this approximate computation on QK generation and attention, it obtains the top-k keys for each query. Based on these
+top-k keys, it skips generating rows of K and V that are not selected by the approximate attention matrix. In matrix Q, the row in which the maximum value
+dominates the other elements within the same row is replaced with a one-hot vector (only the maximum element is set to 1.0 while others are all zero)
+thereby enabling the skipping of Q generation for several rows.
+</span>
+
+<span style="font-size: 16px;">
+&nbsp; &nbsp; &nbsp; Spatten [[7]](#6-reference) proposes cascade pruning based on the intuition that unimportant tokens and heads can be removed 
+safely with little impact on the final results. As the number of removed tokens and heads increases while processing the transformer layers, it can 
+continuously reduce the number of computation in a single layer during inference, whereas pruning in previous works [[4], [5], [6]](#6-reference) was independent
+between each layer. To determine token importance, the attention probabilities for each key are accumulated over all the queries and heads. Similarily, 
+head importance is determined by accumulating all the absolute values of the attention output for each head. Top-k information for token and head is used in
+the QKV generation of the next transformer layer, generating QKV only for selected tokens and heads.
 </span>
 
 
@@ -156,14 +169,16 @@ number, and it can replace costly multiplication with low-cost shift-and-add ope
 &nbsp; &nbsp; &nbsp; quantization here
 <span>
 
+
 ### 4 DISCUSSION
+
 <span style="font-size: 16px;">
-My discussion here
+&nbsp; &nbsp; &nbsp; My discussion here
 </span>
 
 ### 5 CONCLUSION
 <span style="font-size: 16px;">
-My conclusion here
+&nbsp; &nbsp; &nbsp; My conclusion here
 </span>
 
 ### 6 REFERENCE
@@ -184,6 +199,8 @@ My conclusion here
 [6] &nbsp; Y. Qin. "FACT: FFN-Attention Co-optimized Transformer Architecture with Eager Correlation Prediction."
 <em> Proceedings of the 50th Annual International Symposium on Computer Architecture. </em> 2023.
 <br>
+[7] &nbsp; H. Wang. "Spatten: Efficient sparse attention architecture with cascade token and head pruning."
+<em> 2021 IEEE International Symposium on High-Performance Computer Architecture (HPCA). </em> IEEE, 2021.
 </span>
 
 
