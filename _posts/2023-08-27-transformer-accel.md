@@ -21,11 +21,9 @@ og_image: /assets/img/content/post-example/Banner.jpg
 <br>
 &ensp; &ensp; [3 &nbsp; &nbsp; Acceleration Techniques](#3-acceleration-techniques)
 <br>
-&ensp; &ensp; [4 &nbsp; &nbsp; Discussion](#4-discussion)
+&ensp; &ensp; [4 &nbsp; &nbsp; Conclusion](#4-conclusion)
 <br>
-&ensp; &ensp; [5 &nbsp; &nbsp; Conclusion](#5-conclusion)
-<br>
-&ensp; &ensp; [6 &nbsp; &nbsp; Reference](#6-reference)
+&ensp; &ensp; [5 &nbsp; &nbsp; Reference](#5-reference)
 <br>
 </span>
 
@@ -34,7 +32,7 @@ og_image: /assets/img/content/post-example/Banner.jpg
 
 <span style="font-size: 16px;">
 &nbsp; &nbsp; &nbsp; <span style="font-size: 26px;">R</span>ecently, transformer-based deep neural network outperforms in various AI domains such as
-NLP (natural language processing), and CV (computer vision). Its key mechanism is <em> attention </em> which was first introduced in [[1]](#6-reference).
+NLP (natural language processing), and CV (computer vision). Its key mechanism is <em> attention </em> which was first introduced in [[1]](#5-reference).
 Attention mechanism allows model to attend to tokens differently according to their contextual importance. However, attention mechanism
 requires high cost of computation in that its complexity is quadratically proportional to input token length. This limits maximum input sequence length
 of model (such as 1024 or 2048), because inference latency and power consumption are important constraints in real world applications using deep neural network.
@@ -52,7 +50,7 @@ capacity such as maximum token length potentially allowing model to do some more
 
 <span style="font-size: 16px;">
 &nbsp; &nbsp; &nbsp; This article will introduce some backgrounds on attention mechanism and mainly analyze two main accelerating techniques, quantization
-and pruning with several recent researches. Finally, I will discuss about this trends and further research topics.
+and pruning, with several recent researches.
 </span>
 
 ### 2 BACKGROUND
@@ -65,13 +63,13 @@ and pruning with several recent researches. Finally, I will discuss about this t
 <br>
 
 <span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; Transformer-based neural network consists of a stack of transformer layers and additional epilogue layer depending on its target task.
-Number of transformer layer varies according to model capacity. For example, BERT-base uses 12 layers whereas BERT-large uses 24 [[2]](#6-reference). 
+&nbsp; &nbsp; &nbsp; <span style="font-size: 26px;">T</span>ransformer-based neural network consists of a stack of transformer layers and additional epilogue layer depending on its target task.
+Number of transformer layer varies according to model capacity. For example, BERT-base uses 12 layers whereas BERT-large uses 24 [[2]](#5-reference). 
 <br>
 &nbsp; &nbsp; &nbsp; A single transformer layer is shown in left part of Figure 1. It is composed of three main parts:
 <strong> <em> QKV generation, Multi-head attention, Feed forward network (FFN). </em> </strong>
  Dimension of block input is (n, d<sub>model</sub>) where n is sequence length and d<sub>model</sub> is embedding
-dimension (768 for BERT-base) [[2]](#6-reference). In QKV generation stage, the block input is processed by three different fully connected layers,
+dimension (768 for BERT-base) [[2]](#5-reference). In QKV generation stage, the block input is processed by three different fully connected layers,
 resulting in three matrices: Q (Query), K (Key), and V (Value). QKV matrices are divided into h heads and processed by multi-head attention layer. Let's take
 a look at the operation of single head attention layer, shown in the right part of Figure 1. Matrix multiplication of Q and transpose of K is processed by
 row-wise softmax operation. This result is especially referred to as the <em> attention score(=probability) </em> which indicates the degree of correlation
@@ -80,7 +78,7 @@ query. Each head generates an attention output of shape (n, d<sub>k</sub>) and a
 (n, d<sub>model</sub>). Usually this concatenated output pass through additional fc layer, generating same shape.
 Feed forward network is consist of two fc layers and hidden dimension of fc layer
 is usually larger than d<sub>model</sub>.
-For example, hidden dimension of FFN layer is 3,072 which is 4 times of d<sub>model</sub> in BERT-base model [[2]](#6-reference).
+For example, hidden dimension of FFN layer is 3,072 which is 4 times of d<sub>model</sub> in BERT-base model [[2]](#5-reference).
 </span>
 
 
@@ -104,7 +102,7 @@ is same as in the QKV generation.
 
 ### 3 ACCELERATION TECHNIQUES
 <span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; Three main approaches in accelerating neural network are dataflow, sparsity, and quantization [[3]](#6-reference). As dataflow is
+&nbsp; &nbsp; &nbsp; <span style="font-size: 26px;">T</span>hree main approaches in accelerating neural network are dataflow, sparsity, and quantization [[3]](#5-reference). As dataflow is
 fundamentally related to all the HW-based acceleration schemes, this article will primarily focus on the other two:
 <strong> <em> sparsity/pruning and quantization </em> </strong>.
 </span>
@@ -120,17 +118,17 @@ convert unimportant values, such as thosee near-zero value, into zeros, enhancin
 
 <span style="font-size: 16px;">
 &nbsp; &nbsp; &nbsp; Main approaches of pruning is to select only important (highly correlated) keys for each query, thereby increasing the sparsity of
-attention score matrix ([[4], [5], [6]](#6-reference)). To identify a set of important keys, prior research has suggested methods for the
+attention score matrix ([[4], [5], [6]](#5-reference)). To identify a set of important keys, prior research has suggested methods for the
 approximate computation of attention matrix (before softmax).
 <br>
-&nbsp; &nbsp; &nbsp;  A<sup>3</sup> [[4]](#6-reference) approximately computes q &#183; K<sup>T</sup>,
+&nbsp; &nbsp; &nbsp;  A<sup>3</sup> [[4]](#5-reference) approximately computes q &#183; K<sup>T</sup>,
 where q is a single query vector, by iteratively computing the largest and smallest elementwise multiplications. This process can be done
 efficiently by sorting all feature vectors of the key matrix of length n by their values. Keys corresponding to non-zero values in attention vector are
 classified as candidates. Full attention scores are computed only for keys belonging to these candidates, effectively reducing the number of elementwise
 multiplications. After the softmax operation on the attention matrix, further pruning is performed by selecting only elements that exceed 
 T% of the largest element in each row. This pruning can reduce the number of multiplications in the weighted sum of the value matrix.
 <br>
-&nbsp; &nbsp; &nbsp; ELSA [[5]](#6-reference) also approximately computes q &#183; K<sup>T</sup>,
+&nbsp; &nbsp; &nbsp; ELSA [[5]](#5-reference) also approximately computes q &#183; K<sup>T</sup>,
 by estimating the angular distance between q and k with binary hashing. d-dimensional query vector q and key vector k are mapped into k-dimensional binary
 hash vectors using signed projection with k d<sub>model</sub>-dimensional orthogonal vectors:
 <br>
@@ -142,7 +140,7 @@ k<sup>T</sup>, is obtained by applying the cosine function to the estimated angu
 Important keys are selected by comparing them with layer-specific threshold values,
 which are determined offline by running several inferences on the training set.
 <br>
-&nbsp; &nbsp; &nbsp; FACT [[6]](#6-reference) extends approximate computation to QK generation. It uses a leading-one detector as an approximation of the INT
+&nbsp; &nbsp; &nbsp; FACT [[6]](#5-reference) extends approximate computation to QK generation. It uses a leading-one detector as an approximation of the INT
 number which has the effect of rounding down to the nearest power of two. With two operands that are powers of two, costly multiplication can be replaced with
 a low-power shift-and-add operation. With this approximate computation on QK generation and attention, it obtains the top-k keys for each query. Based on these
 top-k keys, it skips generating rows of K and V that are not selected by the approximate attention matrix. In matrix Q, the row in which the maximum value
@@ -151,9 +149,9 @@ thereby enabling the skipping of Q generation for several rows.
 </span>
 
 <span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; Spatten [[7]](#6-reference) proposes cascade pruning based on the intuition that unimportant tokens and heads can be removed 
+&nbsp; &nbsp; &nbsp; Spatten [[7]](#5-reference) proposes cascade pruning based on the intuition that unimportant tokens and heads can be removed 
 safely with little impact on the final results. As the number of removed tokens and heads increases while processing the transformer layers, it can 
-continuously reduce the number of computation in a single layer during inference, whereas pruning in previous works [[4], [5], [6]](#6-reference) was independent
+continuously reduce the number of computation in a single layer during inference, whereas pruning in previous works [[4], [5], [6]](#5-reference) was independent
 between each layer. To determine token importance, the attention probabilities for each key are accumulated over all the queries and heads. Similarily, 
 head importance is determined by accumulating all the absolute values of the attention output for each head. Top-k information for token and head is used in
 the QKV generation of the next transformer layer, generating QKV only for selected tokens and heads.
@@ -166,22 +164,27 @@ the QKV generation of the next transformer layer, generating QKV only for select
 </span>
 
 <span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; quantization here
-<span>
-
-
-### 4 DISCUSSION
-
-<span style="font-size: 16px;">
-&nbsp; &nbsp; &nbsp; My discussion here
+&nbsp; &nbsp; &nbsp; Training and inference with PyTorch framework [[8]](#5-reference) use float or double datatypes in arithmetic operations.
+(Recently, Float16 has emerged as a new trend). A narrower bit width of the datatype is one of the acceleration primitves, as it makes arithmetic operations
+lighter and also reduces memory footprint.
 </span>
 
-### 5 CONCLUSION
+<span style="font-size: 16px;">
+&nbsp; &nbsp; &nbsp; LLM.int8() [[9]](#5-reference) introduces int8 as a datatype primitive to support large language model. It uses vector-wise quantization,
+which first normalizes the range of values by dividing by a per-vector scale factor (the absolute maximum value within a vector) and then maps to the
+nearest int8 values. Matrix multiplication, which is the most general operation involved in a transformer, is performed with two int8 vectors. The result is
+re-scaled to its original range of values. One trick to maintain a reasonable model accuracy is outlier decomposition, which extracts vectors containing
+outlier values and performs floating point matrix multiplication for these vectors. Two outputs from int8 and floating point are summed to produce the
+final result.
+</span>
+
+
+### 4 CONCLUSION
 <span style="font-size: 16px;">
 &nbsp; &nbsp; &nbsp; My conclusion here
 </span>
 
-### 6 REFERENCE
+### 5 REFERENCE
 <span style="font-size: 16px;">
 [1] &nbsp; A. Vaswani. "Attention is all you need." <em> Advances in neural information processing systems 30 </em> (2017).
 <br>
@@ -201,6 +204,12 @@ the QKV generation of the next transformer layer, generating QKV only for select
 <br>
 [7] &nbsp; H. Wang. "Spatten: Efficient sparse attention architecture with cascade token and head pruning."
 <em> 2021 IEEE International Symposium on High-Performance Computer Architecture (HPCA). </em> IEEE, 2021.
+<br>
+[8] &nbsp; A. Paszke. "Pytorch: An imperative style, high-performance deep learning library." 
+<em> Advances in neural information processing systems 32 </em> (2019).
+<br>
+[9] &nbsp; T. Dettmers. "Llm. int8 (): 8-bit matrix multiplication for transformers at scale." 
+<em> arXiv preprint arXiv:2208.07339 </em> (2022).
 </span>
 
 
