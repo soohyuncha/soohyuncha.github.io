@@ -14,7 +14,7 @@ profile_picture:
 <br>
 
 <p style="font-size:16px;"> 
-	I am Soohyun Cha, undergraduate student in Electrical and Computer Engineering (ECE), Seoul National University (SNU).
+	I am Soohyun Cha, M.S student in Electrical and Computer Engineering (ECE), Seoul National University (SNU).
 	My research interests are computer architecture and hardware acceleration for ML systems.
 </p>
 
