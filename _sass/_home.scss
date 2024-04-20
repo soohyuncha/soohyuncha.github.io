@@ -18,3 +18,11 @@
   flex: 1; /* Take up remaining space */
   text-align: justify; /* Align text on both sides */
 }
+
+@media screen and (max-width: 768px) {
+  .image {
+    width: 30%; /* Adjust width for smaller screens */
+    margin-left: 0; /* Remove left margin to center the image */
+    margin-right: auto; /* Align image to the center */
+  }
+}
