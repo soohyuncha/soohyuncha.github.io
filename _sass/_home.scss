@@ -18,6 +18,16 @@
   text-align: justify; /* Align text on both sides */
 }
 
+.content-title {
+	font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.content-text {
+	font-size: 18px;
+  margin-bottom: -20px;
+}
+
 @media screen and (max-width: 500px) {
   .profile {
     display: flex;
@@ -34,5 +44,8 @@
     margin-top: 20px; /* Add spacing between image and text */
     font-size: 16px;
     text-align: justify; /* Align text on both sides */
+  }
+  .content-text {
+    font-size: 16px;
   }
 }
