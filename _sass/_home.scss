@@ -10,7 +10,6 @@
 .profile-image {
   margin-left: 20px; /* Adjust margin as needed */
   width: 150px; /* Set the width of the image */
-  
 }
 
 .profile-text {
@@ -21,10 +20,14 @@
 
 @media screen and (max-width: 500px) {
   .profile {
+    display: flex;
     flex-direction: column; /* Stack items vertically */
   }
-  
-  .text {
+  .profile-image {
+    width: 120px; /* Set the width of the image */
+    
+  }
+  .profile-text {
     order: -1; /* Change order of text to appear after image */
     margin-top: 20px; /* Add spacing between image and text */
     font-size: 16px;
