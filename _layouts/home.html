@@ -7,7 +7,32 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <div class="title">
+          Welcome to my personal blog. 
+        </div>
+
+        <br>
+
+        <div class="profile">
+          <div class="profile-text">
+            I am Soohyun Cha, M.S student in Electrical and Computer Engineering (ECE), Seoul National University (SNU).
+            I'm currently working in Computer Architecture & Systems Lab (CompArch), advised by Prof. Jaewoong Sim.
+            <br>
+            My research interests are computer architecture, especially building an efficient SW-HW co-designed system
+            for emerging workloads, such as ML.
+          </div>
+
+          <div class="profile-image">
+            <img
+              src="{{ "/assets/img/personal_image_202207.jpg" | absolute_url }}"
+              alt=Profile
+            />
+          </div>
+
+        </div>
+
+
+        <!-- <div class="home">
           <img
             src="{{ page.profile_picture.src | absolute_url }}"
             alt="{{ page.profile_picture.alt }}"
@@ -15,7 +40,9 @@
           />
 
           {{ content }}
-        </div>
+        </div> -->
+
+
       </div>
     </div>
 

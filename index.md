@@ -15,6 +15,7 @@ profile_picture:
 
 <p style="font-size:16px;"> 
 	I am Soohyun Cha, M.S student in Electrical and Computer Engineering (ECE), Seoul National University (SNU).
+  I'm currently working in Computer Architecture & Systems Lab (CompArch), advised by Prof. Jaewoong Sim.
 	My research interests are computer architecture and hardware acceleration for ML systems.
 </p>
 
