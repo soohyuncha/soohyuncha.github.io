@@ -22,13 +22,15 @@
   .profile {
     display: flex;
     flex-direction: column; /* Stack items vertically */
+    align-items: center;
   }
   .profile-image {
     width: 120px; /* Set the width of the image */
+    align-self: flex-start; /* Aligns image to the top */
     
   }
   .profile-text {
-    order: -1; /* Change order of text to appear after image */
+    order: 2; /* Change order of text to appear after image */
     margin-top: 20px; /* Add spacing between image and text */
     font-size: 16px;
     text-align: justify; /* Align text on both sides */
