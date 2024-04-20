@@ -19,15 +19,15 @@
   text-align: justify; /* Align text on both sides */
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 500px) {
   .profile {
     flex-direction: column; /* Stack items vertically */
   }
   
   .text {
-    order: 2; /* Change order of text to appear after image */
+    order: -1; /* Change order of text to appear after image */
     margin-top: 20px; /* Add spacing between image and text */
-    font-size: 18px;
+    font-size: 16px;
     text-align: justify; /* Align text on both sides */
   }
 }
