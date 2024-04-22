@@ -28,6 +28,10 @@
   margin-bottom: -20px;
 }
 
+.content-subtext {
+	font-size: 16px;
+}
+
 @media screen and (max-width: 500px) {
   .profile {
     display: flex;
@@ -47,5 +51,8 @@
   }
   .content-text {
     font-size: 16px;
+  }
+  .content-subtext {
+    font-size: 14px;
   }
 }
