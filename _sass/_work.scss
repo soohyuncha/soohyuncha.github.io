@@ -15,6 +15,22 @@
   vertical-align: bottom;
 }
 
+.pub-wrapper {
+  display: flex;
+  align-items: flex-start; /* top-aligns image and text */
+  margin-top: 16px;        /* top margin for whole publication block */
+}
+
+.pub-bubble {
+  width: 70px;
+  margin-right: 1em;
+  flex-shrink: 0;
+}
+
+.pub-content {
+	font-size: 16px;
+}
+
 .career-content {
 	font-size: 20px;
 }
