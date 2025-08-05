@@ -27,6 +27,12 @@
   flex-shrink: 0;
 }
 
+.pub-bubble img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .pub-content {
 	font-size: 16px;
 }
