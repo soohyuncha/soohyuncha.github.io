@@ -13,7 +13,7 @@
 			
 				<div class="social-link-item">
 					<img
-						src = "{{ "/assets/img/icons/email.png" | absolute_url }}"
+						src = "{{ "/assets/img/icons/email.png" | relative_url }}"
 						alt = e-mail
 					/>
 					<a href="mailto:soohyun.cha@samsung.com"> soohyun.cha@samsung.com </a>
@@ -40,7 +40,7 @@
 			<!--style="margin-right: 45px;"-->
 			<div class="social-link-item" style="width: 50%";>
 				<img
-					src = "{{ "/assets/img/icons/github.png" | absolute_url }}"
+					src = "{{ "/assets/img/icons/github.png" | relative_url }}"
 					alt = github
 				/>
 				<a href="https://github.com/soohyuncha"> GitHub </a>
@@ -49,7 +49,7 @@
 			
 			<div class="social-link-item" style="width: 50%";">
 				<img
-					src = "{{ "/assets/img/icons/tistory.png" | absolute_url }}"
+					src = "{{ "/assets/img/icons/tistory.png" | relative_url }}"
 					alt = tistory
 				/>
 				<a href="https://crm06217.tistory.com/"> Tistory </a>
@@ -58,7 +58,7 @@
 			
 			<div class="social-link-item" style="width: 50%";>
 				<img
-					src = "{{ "/assets/img/icons/linkedin.png" | absolute_url }}"
+					src = "{{ "/assets/img/icons/linkedin.png" | relative_url }}"
 					alt = linkedin
 				/>
 				<a href="https://www.linkedin.com/in/soohyun-cha-abbaa0241/"> Linkedin </a>
@@ -79,9 +79,9 @@
           {% for follow in site.footer.follow %}
             <div class="social-link">
 
-              {% assign follow_icon_path = "/assets/img/icons/" | append: follow.name | downcase | append: ".png" | absolute_url %}
+              {% assign follow_icon_path = "/assets/img/icons/" | append: follow.name | downcase | append: ".png" %}
               <img
-                src="{{ follow_icon_path }}"
+                src="{{ follow_icon_path | relative_url }}"
                 alt="{{ follow.name | downcase }}"
               />
               <a href="{{ follow.link }}">
