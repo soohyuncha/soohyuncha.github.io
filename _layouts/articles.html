@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  {% include head.html %}
+
+  <body>
+    {% include header.html %}
+
+	<div class="page-content">
+		<div class="wrapper page-articles">
+			<div class="blog-post-list">
+				<h4> Articles </h4>
+
+				{% assign article_pages = site.pages | where_exp: "p", "p.article == true" | sort: "date" | reverse %}
+				{% for post in article_pages %}
+					<div class="blog-post-item">
+
+						<span class="blog-post-date">
+							{{ post.date | date: "%m-%d-%Y" }}
+						</span>
+
+						<a href="{{ post.url | replace:".html","" | prepend: site.baseurl }}" class="blog-post-title">
+							{{ post.title }}
+						</a>
+
+					</div>
+
+				{% endfor %}
+			</div>
+
+		</div>
+	</div>
+
+    {% include footer.html %}
+
+    {% include foot.html %}
+  </body>
+</html>
