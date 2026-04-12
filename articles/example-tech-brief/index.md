@@ -8,7 +8,7 @@ article: true
 This is a sample article. The post file is `articles/example-tech-brief/index.md`, and images for this piece can sit in the same folder (for example `diagram.png`) and be referenced with a **relative** path:
 
 ```markdown
-![Diagram]({{ page.dir | append: 'diagram.png' | relative_url }})
+![Diagram](./diagram.png)
 ```
 
 Below, the site uses an existing asset so the page renders even before you add your own PNG or JPEG files:

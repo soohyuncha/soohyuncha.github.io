@@ -1,3 +1,6 @@
 _site
 .sass-cache
 .jekyll-cache
+
+# Microsoft Office lock/temp files (breaks builds on case-sensitive runners)
+**/~$*
