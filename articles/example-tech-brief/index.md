@@ -2,7 +2,7 @@
 layout: post
 title: "Example tech brief (folder-per-post)"
 date: 2026-04-05
-article: true
+article: false
 ---
 
 This is a sample article. The post file is `articles/example-tech-brief/index.md`, and images for this piece can sit in the same folder (for example `diagram.png`) and be referenced with a **relative** path:
